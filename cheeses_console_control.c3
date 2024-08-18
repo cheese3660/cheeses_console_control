@@ -19,7 +19,6 @@ fn void flush() {
     buffer.clear();
 }
 
-
 fn void print(String s) {
     buffer.append(s);
 }
@@ -87,7 +86,7 @@ fn void scroll_down(int lines) {
     @csi_format("%dT", lines);
 }
 
-macro @sgi_format(#format, int n, args...) {
+macro @sgr_format(#format, int n, args...) {
     buffer.appendf("\x1b[%d", n);
     $if $vacount > 0:
         buffer.appendf(#format, ...args);
@@ -135,8 +134,8 @@ enum GraphicsRendition : (int n) {
     NORMAL_SCRIPT = 75,
 }
 
-fn void sgi(GraphicsRendition rendition) {
-    @sgi_format("",rendition.n);
+fn void sgr(GraphicsRendition rendition) {
+    @sgr_format("",rendition.n);
 }
 
 enum TerminalColor : (int base) {
@@ -159,33 +158,33 @@ enum TerminalColor : (int base) {
 }
 
 fn void fg(TerminalColor c) {
-    @sgi_format("", c.base + 30);
+    @sgr_format("", c.base + 30);
 }
 
 fn void bg(TerminalColor c) {
-    @sgi_format("", c.base + 40);
+    @sgr_format("", c.base + 40);
 }
 
 fn void reset_fg() {
-    sgi(DEFAULT_FOREGROUND);
+    sgr(DEFAULT_FOREGROUND);
 }
 
 fn void reset_bg() {
-    sgi(DEFAULT_BACKGROUND);
+    sgr(DEFAULT_BACKGROUND);
 }
 
 fn void fg_pallete(int index) {
-    @sgi_format(";5;%d", 38, index);
+    @sgr_format(";5;%d", 38, index);
 }
 
 fn void bg_pallete(int index) {
-    @sgi_format(";5;%d", 48, index);
+    @sgr_format(";5;%d", 48, index);
 }
 
 fn void fg_rgb(char r, char g, char b) {
-    @sgi_format(";2;%d;%d;%d", 38, r, g, b);
+    @sgr_format(";2;%d;%d;%d", 38, r, g, b);
 }
 
 fn void bg_rgb(char r, char g, char b) {
-    @sgi_format(";2;%d;%d;%d", 48, r, g, b);
+    @sgr_format(";2;%d;%d;%d", 48, r, g, b);
 }
