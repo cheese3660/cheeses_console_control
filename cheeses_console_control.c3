@@ -27,40 +27,40 @@ fn void printf(String format, args...) {
     buffer.appendf(format, ...args);
 }
 
-macro @csi_format(#format, args...) {
+macro csi_format($format, args...) {
     buffer.appendf("\x1B[" +++ #format, ...args);
 }
 
 fn void up(int n=1) {
-    @csi_format("%dA", n);
+    csi_format("%dA", n);
 }
 
 fn void down(int n=1) {
-    @csi_format("%dB", n);
+    csi_format("%dB", n);
 }
 
 fn void right(int n=1) {
-    @csi_format("%dC", n);
+    csi_format("%dC", n);
 }
 
 fn void left(int n=1) {
-    @csi_format("%dD", n);
+    csi_format("%dD", n);
 }
 
 fn void next_line(int n=1) {
-    @csi_format("%dE", n);
+    csi_format("%dE", n);
 }
 
 fn void previous_line(int n=1) {
-    @csi_format("%dF", n);
+    csi_format("%dF", n);
 }
 
 fn void goto_column(int c=1) {
-    @csi_format("%dG", c);
+    csi_format("%dG", c);
 }
 
 fn void goto(int row = 1, int column = 1) {
-    @csi_format("%d;%dH", row, column);
+    csi_format("%d;%dH", row, column);
 }
 
 enum EraseMode : (int number) {
@@ -71,22 +71,22 @@ enum EraseMode : (int number) {
 }
 
 fn void erase(EraseMode mode = CURSOR_TO_END) {
-    @csi_format("%dJ", mode.number);
+    csi_format("%dJ", mode.number);
 }
 
 fn void erase_line(EraseMode mode = CURSOR_TO_END) {
-    @csi_format("%dK", mode.number);
+    csi_format("%dK", mode.number);
 }
 
 fn void scroll_up(int lines) {
-    @csi_format("%dS", lines);
+    csi_format("%dS", lines);
 }
 
 fn void scroll_down(int lines) {
-    @csi_format("%dT", lines);
+    csi_format("%dT", lines);
 }
 
-macro @sgr_format(#format, int n, args...) {
+macro sgr_format($format, int n, args...) {
     buffer.appendf("\x1b[%d", n);
     $if $vacount > 0:
         buffer.appendf(#format, ...args);
@@ -135,7 +135,7 @@ enum GraphicsRendition : (int n) {
 }
 
 fn void sgr(GraphicsRendition rendition) {
-    @sgr_format("",rendition.n);
+    sgr_format("",rendition.n);
 }
 
 enum TerminalColor : (int base) {
@@ -158,11 +158,11 @@ enum TerminalColor : (int base) {
 }
 
 fn void fg(TerminalColor c) {
-    @sgr_format("", c.base + 30);
+    sgr_format("", c.base + 30);
 }
 
 fn void bg(TerminalColor c) {
-    @sgr_format("", c.base + 40);
+    sgr_format("", c.base + 40);
 }
 
 fn void reset_fg() {
@@ -174,17 +174,17 @@ fn void reset_bg() {
 }
 
 fn void fg_pallete(int index) {
-    @sgr_format(";5;%d", 38, index);
+    sgr_format(";5;%d", 38, index);
 }
 
 fn void bg_pallete(int index) {
-    @sgr_format(";5;%d", 48, index);
+    sgr_format(";5;%d", 48, index);
 }
 
 fn void fg_rgb(char r, char g, char b) {
-    @sgr_format(";2;%d;%d;%d", 38, r, g, b);
+    sgr_format(";2;%d;%d;%d", 38, r, g, b);
 }
 
 fn void bg_rgb(char r, char g, char b) {
-    @sgr_format(";2;%d;%d;%d", 48, r, g, b);
+    sgr_format(";2;%d;%d;%d", 48, r, g, b);
 }
