@@ -28,7 +28,7 @@ fn void printf(String format, args...) {
 }
 
 macro csi_format($format, args...) {
-    buffer.appendf("\x1B[" +++ #format, ...args);
+    buffer.appendf("\x1B[" +++ $format, ...args);
 }
 
 fn void up(int n=1) {
@@ -89,7 +89,7 @@ fn void scroll_down(int lines) {
 macro sgr_format($format, int n, args...) {
     buffer.appendf("\x1b[%d", n);
     $if $vacount > 0:
-        buffer.appendf(#format, ...args);
+        buffer.appendf($format, ...args);
     $endif
     buffer.append('m');
 }
